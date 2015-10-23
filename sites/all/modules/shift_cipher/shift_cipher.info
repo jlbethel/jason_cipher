@@ -1,0 +1,5 @@
+name = Shift Cipher
+description = Allows user to input text, the direction the cipher should move (left or right), and the value of the shift.
+package = Epicodus Examples
+core = 7.x
+files[] = shift_cipher.module
