@@ -55,19 +55,44 @@ function shift_cipher_form() {
 }
 
 function shift_cipher_form_submit($form, &$form_state) {
-  $letters_array = ['a' , 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  $alphabet_array = ['a' , 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
   $shift_value = $form_state['values']['shift_value'];
   $shift_direction = $form_state['values']['shift_direction'];
   $phrase_to_shift = $form_state['values']['phrase_to_shift'];
   $result = '';
-  $exploded_phrase = str_split($phrase_to_shift);
+  //Take user string and break it into individual words and place in array
+  $exploded_phrase = explode(" ", $phrase_to_shift);
   $shifted_letters = array();
-  foreach($exploded_phrase as $letter) {
-    $letter_key = array_search($letter, $letters_array);
-    $shifted_key = $letter_key + $shift_value;
-    array_push($shifted_letters, $letters_array[$shifted_key]);
+  $shifted_phrase = array();
+  //Loop through each word in the array
+  foreach($exploded_phrase as $word) {
+    //for each word split it into individual letters
+    $split_word = str_split($word);
+    //for each letter apply cipher
+    foreach($split_word as $letter) {
+      //find letter in alphabet array
+      $letter_key = array_search($letter, $alphabet_array);
+      //if direction is right add shift value, otherwise substract it. If number is negative add it to 26 to get positive number.
+      if($shift_direction === 'right') {
+        $shifted_key = $letter_key + $shift_value;
+      } else {
+          $shifted_key = $letter_key - $shift_value;
+          if ($shifted_key < 0) {
+            $shifted_key += 26;
+          }
+        }
+      //after cipher is applied push changed letter to array
+      array_push($shifted_letters, $alphabet_array[$shifted_key]);
+    }
+      //after all letters have had cypher applied implode them to a word
+    $shifted_word = implode('', $shifted_letters);
+    //push this word to array of words that will become the new phrase
+    array_push($shifted_phrase, $shifted_word);
+    //clear letters array
+    $shifted_letters = array();
   }
-  $result = implode('', $shifted_letters);
+  //take array of new words and implode them to shifted phrase
+  $result = implode(' ', $shifted_phrase);
   $_SESSION['cipher_output'] = $result;
   $form_state['redirect'] = 'cipher_results';
 }
@@ -75,6 +100,5 @@ function shift_cipher_form_submit($form, &$form_state) {
 
 function cipher_results() {
   $shifted_phrase = $_SESSION['cipher_output'];
-  // var_dump($shifted_phrase);
   return "Your shifted phrase is $shifted_phrase";
 }
