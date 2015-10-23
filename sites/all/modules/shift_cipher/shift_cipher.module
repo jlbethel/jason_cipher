@@ -53,3 +53,18 @@ function shift_cipher_form() {
 
   return $form;
 }
+
+function shift_cipher_form_submit($form, &$form_state) {
+  $shift_value = $form_state['values']['shift_value'];
+  $shift_direction = $form_state['values']['shift_direction'];
+  $phrase_to_shift = $form_state['values']['phrase_to_shift'];
+  $result = $shift_value . $shift_direction . $phrase_to_shift;
+  $_SESSION['cipher_output'] = $result;
+  $form_state['redirect'] = 'cipher_results';
+}
+
+
+function cipher_results() {
+  $shifted_phrase = $_SESSION['cipher_output'];
+  return "Your shifted phrase is $shifted_phrase";
+}
