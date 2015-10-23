@@ -1,0 +1,55 @@
+<?php
+
+function shift_cipher_menu() {
+  $items = array();
+  $items['shift_cipher'] = array(
+    'title' => 'Shift Cipher',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shift_cipher_form'),
+  );
+
+  $items['cipher_results'] = array(
+    'title' => 'Results',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'page callback' => 'cipher_results',
+  );
+
+  return $items;
+}
+
+function shift_cipher_form() {
+  $form = array();
+  $form['shift_value'] = array(
+    '#title' => 'Shift Value',
+    '#type' => 'textfield',
+    '#description' => t('Enter the number of spaces in the alphabet you want to shift.'),
+    // '#element_validate' => array(),
+    '#required' => TRUE,
+  );
+
+  $form['shift_direction'] = array(
+    '#title' => 'Shift Direction',
+    '#type' => 'textfield',
+    '#description' => t('Enter the direction(left or right) of the shift.'),
+    // '#element_validate' => array(),
+    '#required' => TRUE,
+  );
+
+  $form['phrase_to_shift'] = array(
+    '#title' => 'Phrase to Shift',
+    '#type' => 'textfield',
+    '#description' => t('Enter the phrase to be shifted.'),
+    // '#element_validate' => array(),
+    '#required' => TRUE,
+  ) ;
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Shift',
+  );
+
+  return $form;
+}
